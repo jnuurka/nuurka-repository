@@ -1,4 +1,4 @@
-const apikey = "http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=628f2dc2c1d81d9b1020f5dff19c745e"; // API Key-gaaga ku dar halkaan
+const apikey = "http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=628f2dc2c1d81d9b1020f5dff19c745e";
 
 window.addEventListener("load", async () => {
     if (navigator.geolocation) {
