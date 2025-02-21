@@ -1,11 +1,17 @@
-const apikey = "http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=628f2dc2c1d81d9b1020f5dff19c745e";
+
+const apikey = "628f2dc2c1d81d9b1020f5dff19c745e";
 
 window.addEventListener("load", async () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             let { longitude: lon, latitude: lat } = position.coords;
             await fetchWeatherByCoords(lat, lon);
+        }, (error) => {
+            console.error("Geolocation Error:", error);
+            showError("Location access denied. Please enter a city manually.");
         });
+    } else {
+        showError("Geolocation is not supported by this browser.");
     }
 });
 
@@ -14,9 +20,16 @@ async function fetchWeatherByCoords(lat, lon) {
         const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apikey}&units=metric`;
         let res = await fetch(url);
         let data = await res.json();
+
+        if (data.cod !== 200) {
+            showError("Weather data not found!");
+            return;
+        }
+
         weatherReport(data);
     } catch (err) {
         console.error("Network Error:", err);
+        showError("Failed to fetch weather data.");
     }
 }
 
@@ -40,6 +53,7 @@ async function searchByCity() {
         weatherReport(data);
     } catch (err) {
         console.error("Network Error:", err);
+        showError("Failed to fetch city weather data.");
     }
 
     document.getElementById("input").value = "";
